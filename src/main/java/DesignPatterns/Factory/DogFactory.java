@@ -10,14 +10,14 @@ public class DogFactory {
         aa[0] = "big";
         main01(aa);
     }
-    public static void main01(String[] args) {
+    public static void main01(String[] passString) {
 
-        if (args[0].equals("small"))
+        if (passString[0].equals("small"))
             System.out.println(Dog_01_Implement_01.speak());
-        else if (args[0].equals("big"))
+        else if (passString[0].equals("big"))
             System.out.println(Dog_02_Implement_02.speak());
 
-        else if (args[0].equals("working"))
+        else if (passString[0].equals("working"))
             System.out.println(Dog_03_Implement_03.speak())
                     ;
         else {
