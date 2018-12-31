@@ -1,0 +1,499 @@
+TestNG::
+Parallel test execution::
+            Two ways to run execution[methods/clasess] in parallel
+            1.using maven-surefire-plugin
+            to run test methods::
+            <configuration>
+            <parallel>methods</parallel>
+            <threadCounts><10></threadCounts>
+
+            2.to run clasess
+            <configuration>
+            <parallel>clasess</parallel>
+            <threadCounts>10</threadCounts>
+            <configuration>
+
+            run maven commands: mvn clean test
+            add  sysout comments:; System.out.println("thread id:" + Thread.currentThread().getId());
+
+            3. Through testNG xml file:
+            <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+            <suite name="xxxxxx" parallel="methods" thread-count="2">
+            <test name="testngTest">
+            <classes>
+            <class name="xxxxx" />
+            </classes>
+            </test> 
+            </suite>
+            4.Run Test group parallel:
+            <suite name="Parallel test suite" parallel="classes" thread-count="2">
+            For classes your testng.xml structure should be like below:-
+
+            <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+            <suite name="Parallel test suite" parallel="classes" thread-count="2">
+            <test name="Test 1">
+                <classes>
+                <class name="com.parallel.TestParallelClassOne"/>
+                <class name="com.parallel.TestParallelClassTwo"/>
+                </classes>
+            </test>
+            </suite>
+            <suite name="allSuites">
+            <suite-files>
+                <suite-file path="suite1.xml" />
+                <suite-file path="suite2.xml" />
+                ...
+            </suite-files>
+            </suite>
+
+-------------------------------------------------------------
+Dependencies:
+Hard Dependencies:
+All the methods you depend on must have run and succeeded for you to run.
+If at least one failure occurred in your dependencies, you will not be invoked and marked as a SKIP in the report.
+[alwaysRun=false]
+
+
+Soft Dependencies:
+You will always be run after the methods you depend on, even if some of them have failed.
+[alwaysRun=true]
+-------------
+
+Both dependsOnGroups and dependsOnMethods accept regular expressions as parameters.
+For dependsOnMethods, if you are depending on a method which happens to have several overloaded 
+versions, all the overloaded methods will be invoked. 
+If you only want to invoke one of the overloaded methods, you should use dependsOnGroups.
+
+TestNg dependsOnMethods:
+----------------------------------------------
+dependsOnMethods :: attribute on a test method [test1 e.g.] specifies all the test methods [test2, test3,..] this test method depends on
+alwaysRun=true :: Setting alwaysRun attribute on a test method to true forces the execution of this test even if the tests it depends on were failed.
+
+Example:
+
+package com.websystique.testng;
+ 
+public class Calculator {
+ 
+    public int add(int a, int b){
+        return a+b;
+    }
+ 
+    public int divide(int a, int b){
+        return a/b;
+    }
+ 
+}
+ackage com.websystique.testng;
+ 
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+ 
+public class TestNGDependsOnMethodsExample {
+ 
+    @BeforeMethod
+    public void beforeMethod() {
+        System.out.println("beforeMethod()");
+    }
+ 
+    @AfterMethod
+    public void afterMethod() {
+        System.out.println("afterMethod()\n");
+    }
+     
+    @Test
+    public void testAdd() {
+        System.out.println("testAdd()");
+        Calculator calculator = new Calculator();
+        Assert.assertEquals(calculator.add(15, 2) , 17);
+    }
+ 
+    @Test
+    public void testDivide() {
+        System.out.println("testDivide()");
+        Calculator calculator = new Calculator();
+        Assert.assertEquals(calculator.divide(16, 0), 16);
+    }
+     
+    @Test(dependsOnMethods={"testAdd", "testDivide"})
+    public void testProcessRealNumbers() {
+        System.out.println("testProcessRealNumbers()");
+    }
+ 
+    @Test(dependsOnMethods={"testAdd", "testDivide"}, alwaysRun=true)
+    public void testProcessEvenNumbers() {
+        System.out.println("testProcessEvenNumbers()");
+    }
+ 
+}
+--
+Outcome:
+beforeMethod() 
+testAdd()
+AfterMethod
+beforeMethod() 
+testDivide()
+AfterMethod
+beforeMethod()
+testProcessEvenNumbers()
+AfterMethod()
+
+The testProcessRealNumbers() -- will be skipped as testDivide() will fail when number divide by 0;
+------------------------------------------------------------------
+TestNG expectedExceptions:: feature to test the expected exception your code might throw in certain situations
+continue to work, run sucessfully with the exception.
+@Test(expectedExceptions = Exception.class)
+
+example:
+    @Test(expectedExceptions = ArithmeticException.class)
+    public void testDivideByZero() {
+        System.out.println("testDivideByZero()");
+        Assert.assertEquals(calculator.divide(16, 0), 12345);
+    }
+---------------------------------------------------------------------------------------------  
+How To Disable A Test Case In Testng?
+TestNG enable/disable feature: either use ignore or disable using enabled= false annotations.
+To disable a test : @Test(enabled=false)
+
+example:
+   @Test(enabled = false)
+    public void testSubtract() {//We are disabling this test. Look at enabled=false with @Test
+        System.out.println("testSubtract()");
+        Assert.assertEquals(calculator.subtract(5, 2), 3.0);
+    }
+----------------------------------------------------------------------------------------------------
+How To Skip A @test Method From Execution In Testng?
+
+By using throw new SkipException()
+Once SkipException() thrown, remaining part of that test method will not be executed and control will goes directly to next test method execution.
+throw new SkipException("Skipping - This is not ready for testing ");
+-------------------------------------------------------------------------------------------------------
+How To Control The Order Of Test Execution In TestNG?
+
+set the “preserve-order” attribute to “true” in the “TestNG.XML.”
+<test name="MyTestOrder" preserve-order="true">
+    <classes>
+        <class name="TestNGOrder">
+            <methods>
+                <include name="stepOne" />
+                <include name="stepTwo" />
+            </methods>
+        </class>
+    </classes>
+</test>
+//[A test case with lower priority value will always have higher precedence.]
+public class TestNGOrder {
+	@Test(priority = 1)
+	public void stepOne() {
+		System.out.println("Executing stepOne");
+	}
+public class TestNGOrder {
+	@Test(priority = 2)
+	public void stepOne() {
+		System.out.println("Executing stepTwo");
+	}
+
+-------------------------------------------------------------------------------------------------------
+TestNG: Include and Exclude groups:
+
+@Test(groups = {"checkintest", "broken"} )
+public void testMethod2() {
+}
+<test name="Simple example">
+  <groups>
+    <run>
+      <include name="checkintest"/>
+      <exclude name="broken"/>
+    </run>
+  </groups>
+  
+  <classes>
+    <class name="example1.Test1"/>
+  </classes>
+</test>
+---------------------------------------------------
+TestNG: Include and Exclude methods:
+<classes>
+  <class name="TestCaseName">
+     <methods>
+       <exclude name="TestMethodNameToExclude"/>
+     </methods>
+  </class>      
+</classes>
+----------------------------------------------------------------------------------------------------
+Parameters from testNg.xml:: setting of parameter from testMg.xml ..
+
+@Parameters({ "first-name" })
+@Test
+public void testSingleString(String firstName) {
+  System.out.println("Invoked testString " + firstName);
+  assert "Cedric".equals(firstName);
+}
+
+<suite name="My suite">
+  <parameter name="first-name"  value="Cedric"/>
+  <test name="Simple example">
+  <-- ... -->
+
+--------------------------------------------------------------------------------------------------------
+what is @DataProvider?
+
+@DataProvider:A test method that uses DataProvider will be executed the specific methods multiple number of times based 
+              on the data provided by the DataProvider. The test method will be executed using the same instance of the test
+              class to which the test method belongs.
+
+Parameter setup using Data provider: 
+//This method will provide data to any test method that declares that its Data Provider
+//is named "test1"
+@DataProvider(name = "test1")
+public Object[][] createData1() {
+ return new Object[][] {
+   { "Cedric", new Integer(36) },
+   { "Anne", new Integer(37)},
+ };
+}
+ 
+//This test method declares that its data should be supplied by the Data Provider
+//named "test1"
+@Test(dataProvider = "test1")
+public void verifyData1(String n1, Integer n2) {
+ System.out.println(n1 + " " + n2);
+}
+------------------------------------------------------------------------------------------------
+---To run data provider parallel-------------
+@DataProvider(parallel = true)
+-------------------------------------------------------------------------------------------------
+What is @Factory annotations:
+Factories allow you to create tests dynamically. 
+
+@Factory: A factory will execute all the test methods present inside a test class using a 
+separate instance of the respective class with different set of data.
+
+public class TestClass {
+
+    private int value;
+
+    @Factory(dataProvider = "data", dataProviderClass = TestClass.class)
+    public TestClass(final int value) {
+        this.value = value;
+    }
+
+    @Test(alwaysRun = true)
+    public void testOdd() {
+        Assert.assertTrue(value % 2 != 0);
+    }
+
+    @Test(alwaysRun = true)
+    public void testEven() {
+        Assert.assertTrue(value % 2 == 0);
+    }
+
+    @DataProvider(name = "data")
+    public static Iterator<Object[]> data() {
+
+        List<Object[]> list = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            list.add(new Object[] { i });
+        }
+        return list.iterator();
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="mobile rc automation suite"
+    data-provider-thread-count="10" parallel="tests" thread-count="5">
+
+    <test name="test_1" parallel="instances"
+        thread-count="5">
+        <classes>
+            <class name="com.test.TestClass1" />
+        </classes>
+    </test>
+
+    <test name="test_2" parallel="instances"
+        thread-count="5">
+        <classes>
+            <class name="com.test.TestClass2" />
+        </classes>
+    </test>
+
+    <test name="test_3" parallel="instances"
+        thread-count="5">
+        <classes>
+            <class name="com.test.TestClass3" />
+        </classes>
+    </test>
+
+</suite>
+
+-------------------------------------------------------------------------------------------------
+What Is The Use Of @test(invocationcount=x)?
+
+The invocationcount attribute tells how many times TestNG should run a test method
+
+@Test(invocationCount = 10)
+public void testCase1(){
+In this example, the method testCase1 will be invoked ten times.
+--------------------------------------------------------------------------------------------------
+What Is The Use Of @test(threadpoolsize=x)?
+
+The threadPoolSize attribute tells to form a thread pool to run the test method through multiple threads.
+This attribute is ignored if invocationCount is not specified
+
+Example: In this example, the method testCase1 will be invoked from three different threads.
+
+@Test(threadPoolSize = 3, <code class="plain">invocationCount = </code><code class="value">10</code>)
+public void testCase1(){}
+--------------------------------------------------------------------------------------------------------------------------------
+What Does The Test Timeout Mean In Testng?
+
+The maximum number of milliseconds a test case should take.
+
+@Test(threadPoolSize = 3, invocationCount = 10,  timeOut = 10000)
+public void testCase1(){}
+
+ testCase1 will be invoked ten times from three different threads.a time-out of ten seconds guarantees that none of the threads will block on this thread forever.
+ -----------------------------------------------------------------------------------------------------------------------------------
+
+ What Are The Core Features Of TestNG Framework?
+Some of the notable features of TestNG are as follows.
+
+Concurrency – TestNG can run multiple tests in parallel. It creates a thread for each test and executes them in a thread-safe manner.
+Dependency – In TestNG, we can add a test method which depends on a single or a group of test methods. 
+             This feature ensures the execution of the dependency methods before the actual test.
+Prioritization – We can specify the order of tests using the “priority” parameter inside the @Test annotation.
+Grouping – It lets us create groups with own test methods and groups having other groups.
+          we can  specify groups in the “TestNG.XML” file. Also, the include/exclude tags can help us customize
+           the test execution in groups.
+Parameterization – TestNG has a parameter annotation that allows values to pass as arguments to test methods.
+Data Sourcing – TestNG introduces data provider annotation to take input from external sources like excel.
+----------------------------------------------------------------------------------------------------------------------------------------
+TestNg annotations::
+Test
+BeforeMethod
+AfterMethod
+BeforeClass
+AfterClass
+BeforeTest
+AfterTest
+BeforeSuite
+AfterSuite
+BeforeGroups
+AfterGroups
+DataProvider
+Factory
+Listeners
+Parameters
+-----------------------------------------------------------------------------------------------------------------------------------------
+TestNG Assertions:
+assertEquals – Passes if the arguments match else fails.
+assertNotEquals – If the actual and expected values match, then the assertion fails.
+assertTrue – Passes if the input condition is true else throws AssertionError.
+assertFalse – Passes if the input condition is false else throws AssertionError.
+assertNull – Performs the null test on an object. In case of a null, the test aborts with an exception.
+assertNotNull – It does the opposite of the “asserNull.” The test method breaks with an exception upon discovering a non-null object.
+-----------------------------------------------------------------------------------------------------------------------------------------
+What Is The Purpose Of The “TestNG.XML” File?
+
+The “TestNG.XML” is a configuration file which contains the TestNG project settings.
+It also represents a TestNG suite which can include one or more tests.
+
+Setup multiple tests to run with a single click.
+Include/Exclude test cases.
+Select a specific group or groups.
+Supply parameters for tests.
+Introduce group-level dependencies.
+Setup test parallelization.
+Configure listeners for tests.
+----------------------------------------------------------------------------------------------------------------------------------------
+ How Is The @Factory Annotation Different From The @DataProvider?
+ @Factory: It creates the instances of a test class at runtime.
+           All the test methods of the TestNG class executes with the given dataset.
+ @DataProvider:The data provider is only applicable for the test methods which comes immediately after it.
+               It can run a specific method the no. of times equals to the row count returned by the data provider handler.
+                 
+
+ public class LoadTestScenario {
+
+    private WebDriver driver;
+
+    public LoadTestScenario(WebDriver firefox) {
+        driver = firefox;
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    }
+
+    @AfterClass
+    public void afterClass() {
+        driver.quit();
+    }
+
+    @Test(enabled = true, description = "Intentionally Skip This Case")
+    public void testcase1() {
+
+        throw new SkipException("Skipping the test case");
+    }
+
+    @Test(enabled = true, description = "Verify Gmail Link")
+    public void testcase2() {
+
+        driver.get("http://www.google.com");
+
+        String search_text = "Gmail";
+        WebElement link = driver.findElement(By.partialLinkText("Gmail"));
+        String text = link.getText();
+
+        Assert.assertEquals(text, search_text, "Text not found!");
+    }
+
+    @Test(enabled = true, description = "Intentionally Fail This Case")
+    public void testcase3() {
+
+        driver.get("http://www.google.com");
+
+        // We want this case to fail to display variety of status in test
+        // report.
+        // Correct link is "Sign in" instead of "Sign-in".
+        String search_text = "Sign-in";
+        WebElement link = driver.findElement(By.partialLinkText("Sign in"));
+        String text = link.getText();
+
+        Assert.assertEquals(text, search_text, "Text not found!");
+    }
+}
+
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.Factory;
+
+public class LoadTestFactory {
+
+    @Factory
+    public Object[] createInstances() {
+
+        Object[] obj = new Object[10];
+
+        for (int iter = 0; iter < 10; iter++) {
+            obj[iter] = new LoadTestScenario(new FirefoxDriver());
+        }
+
+        return obj;
+    }
+}
+---------------------------------------------------------------------------------------------
+Listeners In TestNG:
+TestNG framework defines a set of classes known as listeners to monitor the different states of the tests.
+The Listeners extend the following marker interface – “org.testng.ITestListener”. Using them, we can improvise the behavior of a TestNG test.
+ISuiteListener – It monitors the start and finish of a test suite.
+ITestListener – It keeps checking on different states of a TestNG test.
+
+
+Methods Available In TestNG’s ITestListener Interface?
+onStart – It gets triggered after the instantiation of the test class and before the call to any configuration method.
+onTestSuccess – It gets triggered if a test succeeds.
+onTestFailure – It gets triggered if a test fails.
+onTestSkipped – It gets triggered for every test getting ignored.
+onTestFailedButWithinSuccessPercentage – It gets triggered for every test that fails but remain below the success percentage.
+onFinish – It gets triggered after all the tests finish execution and no configuration method is left.
+------------------------------------------------------------------------------------------------------------
