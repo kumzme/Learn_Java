@@ -202,8 +202,6 @@ public class AcceptHeaderITest extends WithJetty {
             RestAssured.given().when().get("/path").then();
         }
 
-
-
         try {
             RestAssured.port = 1121;
             //RestAssured.;
@@ -214,6 +212,12 @@ public class AcceptHeaderITest extends WithJetty {
             ex.printStackTrace();
         }
 
+        RequestSpecBuilder requestBuilder = new RequestSpecBuilder();
+        requestBuilder.setBaseUri("http://www.example.com");
+        requestBuilder.setBasePath("/path");
+        requestBuilder.addHeader("Authorization", "Bearer" + token);
+        RequestSpecification request = RestAssured.given().spec(requestBuilder.build()).when();
+        Response response = request.post().andReturn();
 
         restAssured.given().and().auth().certificate("a", "a");
         restAssured.given().and().auth().digest("aa", "a");
