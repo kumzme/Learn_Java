@@ -1,7 +1,9 @@
 package Selenium.connection;
 
+import org.testng.util.Strings;
+
 public class conn {
-    public static void main(str[] args){
+    public static void main(Strings[] args){
 
     }
     /*
