@@ -20,3 +20,28 @@ In summary, there are four different ways to present certificates and their comp
     PKCS7 - An open standard used by Java and supported by Windows. Does not contain private key material.
     PKCS12 - A Microsoft private standard that was later defined in an RFC that provides enhanced security versus the plain-text PEM format. This can contain private key material. Its used preferentially by Windows systems, and can be freely converted to PEM format through use of openssl.
     DER - The parent format of PEM. It's useful to think of it as a binary version of the base64-encoded PEM file. Not routinely used very much outside of Windows.
+
+
+
+````
+125
+  
+  PEM on it's own isn't a certificate, it's just a way of encoding data. X.509 certificates are one type of data that is commonly encoded using PEM.
+  
+  PEM is a X.509 certificate (whose structure is defined using ASN.1), encoded using the ASN.1 DER (distinguished encoding rules), then run through Base64 encoding and stuck between plain-text anchor lines (BEGIN CERTIFICATE and END CERTIFICATE).
+  
+  You can represent the same data using the PKCS#7 or PKCS#12 representations, and the openssl command line utility can be used to do this.
+  
+  The obvious benefits of PEM is that it's safe to paste into the body of an email message because it has anchor lines and is 7-bit clean.
+  
+  RFC1422 has more details about the PEM standard as it related to keys and certificates.
+  
+    To convert a DER file (.crt .cer .der) to PEM: 
+        openssl x509 -inform der -in cert.cer -out cert.pem. 
+    To convert a PEM file to DER: 
+        openssl x509 -outform der -in cert.pem -out certi.der. 
+    To convert a PKCS#12 file (.pfx .p12) containing a private key and certificates to PEM: 
+        openssl pkcs12 -in keyStore.pfx -out keyStore.pem -nodes. 
+    To convert a PEM certificate file and a private key to PKCS#12 (.pfx .p12): 
+        openssl pkcs12 -export -out cert.pfx -inkey privateKey.key -in cert.crt -certfile CACert.crt
+````
