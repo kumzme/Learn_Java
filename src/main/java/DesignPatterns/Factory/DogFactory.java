@@ -1,5 +1,7 @@
 package DesignPatterns.Factory;
 
+
+
 public class DogFactory {
     public static void main(String[] args) {
         String[] aa = new String[1];
