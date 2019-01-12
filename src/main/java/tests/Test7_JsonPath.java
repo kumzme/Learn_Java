@@ -30,23 +30,23 @@ public class Test7_JsonPath {
         for (Header h : headers) {
             System.out.println(h.getName() + ":" + h.getValue());
         }
-        Map<String,String> getcookies = response.getCookies();
-        for(Map.Entry<String,String > entry : getcookies.entrySet()){
+        Map<String, String> getcookies = response.getCookies();
+        for (Map.Entry<String, String> entry : getcookies.entrySet()) {
             System.out.println(entry.getKey() + ":" + entry.getValue());
-           }
-      Cookies cookies = response.detailedCookies();
-       System.out.println(cookies.asList());
-       for(int i = 0; i < cookies.size();i++){
-           System.out.println(cookies.exist());
-           System.out.println(cookies.get("__cfduid").getExpiryDate());
-           System.out.println(cookies.get("__cfduid").getName());
-           System.out.println(cookies.get("__cfduid").getComment());
-           System.out.println(cookies.get("__cfduid").getDomain());
-           System.out.println(cookies.get("__cfduid").getMaxAge());
-           System.out.println(cookies.get("__cfduid").hasExpiryDate());
+        }
+        Cookies cookies = response.detailedCookies();
+        System.out.println(cookies.asList());
+        for (int i = 0; i < cookies.size(); i++) {
+            System.out.println(cookies.exist());
+            System.out.println(cookies.get("__cfduid").getExpiryDate());
+            System.out.println(cookies.get("__cfduid").getName());
+            System.out.println(cookies.get("__cfduid").getComment());
+            System.out.println(cookies.get("__cfduid").getDomain());
+            System.out.println(cookies.get("__cfduid").getMaxAge());
+            System.out.println(cookies.get("__cfduid").hasExpiryDate());
 
 
-       }
+        }
 
     }
 }
