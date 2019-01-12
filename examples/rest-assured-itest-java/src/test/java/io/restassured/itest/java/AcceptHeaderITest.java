@@ -202,8 +202,6 @@ public class AcceptHeaderITest extends WithJetty {
             RestAssured.given().when().get("/path").then();
         }
 
-
-
         try {
             RestAssured.port = 1121;
             //RestAssured.;
