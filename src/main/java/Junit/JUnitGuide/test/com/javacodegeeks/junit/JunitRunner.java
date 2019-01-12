@@ -8,7 +8,9 @@ public class JunitRunner {
 
 	public static void main(String[] args) {
 
-		Result result = JUnitCore.runClasses(AssertionsTest.class);
+		Class<?> aa     = AssertionsTest.class;
+
+		Result                result = JUnitCore.runClasses(aa);
 		for (Failure fail : result.getFailures()) {
 			System.out.println(fail.toString());
 		}

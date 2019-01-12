@@ -2,6 +2,7 @@ package Junit.JUnitGuide.test.com.javacodegeeks.junit;
 
 import static org.junit.Assert.*;
 
+import Junit.JUnitGuide.src.com.javacodegeeks.junit.FirstDayAtSchool;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -9,8 +10,8 @@ import org.junit.Test;
 public class FirstDayAtSchoolTest {
 
 	FirstDayAtSchool school = new FirstDayAtSchool();
-	String[] bag1 = { "Books", "Notebooks", "Pens" };
-	String[] bag2 = { "Books", "Notebooks", "Pens", "Pencils" };
+	String[]         bag1   = { "Books", "Notebooks", "Pens" };
+	String[]         bag2   = { "Books", "Notebooks", "Pens", "Pencils" };
 
 	@Test
 	public void testPrepareMyBag() {
