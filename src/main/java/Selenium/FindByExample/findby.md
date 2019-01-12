@@ -1,7 +1,11 @@
 //Locators
-this.driver.FindElement(By.ClassName("className"));
-this.driver.FindElement(By.CssSelector("css"));
-this.driver.FindElement(By.Id("id"));
+
+`this.driver.FindElement(By.ClassName("className"));`
+
+`this.driver.FindElement(By.CssSelector("css"));`
+
+`this.driver.FindElement(By.Id("id"));`
+
 this.driver.FindElement(By.LinkText("text"));
 this.driver.FindElement(By.Name("name"));
 this.driver.FindElement(By.PartialLinkText("pText"));

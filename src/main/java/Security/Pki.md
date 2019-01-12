@@ -39,6 +39,18 @@ I hope this helps you….you can go through videos on YouTube…..it will get mo
 
 ### >  Keys
 
+
+* a
+* a
+* a
+* a
+ > - a
+- a
+- a
+
+``aaa ``
+
+
 The Public and Private key pair comprise of two uniquely related cryptographic keys (basically long random numbers). Below is an example of a Public Key:
 
 3048 0241 00C9 18FA CF8D EB2D EFD5 FD37 89B9 E069 EA97 FC20 5E35 F577 EE31 C4FB C6E4 4811 7D86 BC8F BAFA 362F 922B F01B 2F40 C744 2654 C0DD 2881 D673 CA2B 4003 C266 E2CD CB02 0301 0001

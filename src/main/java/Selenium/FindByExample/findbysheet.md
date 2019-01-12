@@ -223,7 +223,6 @@ every active <input> element
 
 input:disabled
 
-​
 
 every disabled <input> element
 input:enabled
