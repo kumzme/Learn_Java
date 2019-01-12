@@ -22,7 +22,7 @@ public class SerializationToFile {
         Rectangle deSerailzedObject = (Rectangle) DeSerailizedtoObject("restSeralized");
         System.out.println("Rest Area is "+ deSerailzedObject.Area());
 
-        EmployeeClass empc = new EmployeeClass("DeepM",11111,"11111");
+        Serializable_EmployeeClass empc = new Serializable_EmployeeClass("DeepM",11111,"11111");
         SerializationToFile(empc,"empTest");
         System.out.println("employee class sucessfully seralized to byte stream");
     }

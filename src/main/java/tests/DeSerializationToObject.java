@@ -17,7 +17,7 @@ public class DeSerializationToObject {
     }
     public static void main(String args[]) throws Exception {
 
-      EmployeeClass deSearlizedempC = (EmployeeClass) DeSerailizedtoObject("empTest");
+      Serializable_EmployeeClass deSearlizedempC = (Serializable_EmployeeClass) DeSerailizedtoObject("empTest");
       System.out.println(deSearlizedempC.getEmpName());
       System.out.println(deSearlizedempC.getDeptName());
 
