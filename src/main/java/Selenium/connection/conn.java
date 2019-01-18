@@ -13,6 +13,7 @@ public class conn {
     String getString()
     int getInt()
     double getDouble()
+
     absolute (int rowNumber)
 
     * */
