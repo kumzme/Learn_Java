@@ -2,6 +2,8 @@ package collections;
 
 import java.util.*;
 
+import static java.lang.Integer.*;
+
 public class findduplicateElements {
 
     public static void fndDuplicates(List<String> l1){
@@ -18,8 +20,25 @@ public class findduplicateElements {
 
 
     }
+    public static LinkedHashMap<String, Integer> findDups(List<String>l2){
+
+        LinkedHashMap<String, Integer> linkedHashMap = new LinkedHashMap<>();
+        for(String str : l2) {
+            Integer count = linkedHashMap.get(str);
+            if (count == null) {
+                linkedHashMap.put(str, 1);
+            } else {
+                linkedHashMap.put(str, ++count);
+            }
+        }
+            return linkedHashMap;
+
+    }
     public static void main(String[] args){
         List<String> s1 =  new ArrayList<>(Arrays.asList("java1", "java1", "java1", "java1", "c", "cobol", "c", "cobol", "c++"));
         fndDuplicates(s1);
+        LinkedHashMap<String,Integer> linkedHashMap1 = new LinkedHashMap<>();
+        linkedHashMap1=  findDups(s1);
+        System.out.println(linkedHashMap1);
     }
 }
